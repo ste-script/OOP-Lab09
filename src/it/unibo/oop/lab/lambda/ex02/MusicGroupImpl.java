@@ -3,6 +3,7 @@ package it.unibo.oop.lab.lambda.ex02;
 import static org.junit.jupiter.api.DynamicTest.stream;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,46 +36,46 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Stream<String> orderedSongNames() {
-        List <String> nameList = new ArrayList<>();
-        this.songs.forEach(s -> nameList.add(s.songName));
-        return nameList.stream().sorted();
+        return this.songs.stream().map(Song::getSongName).sorted();
     }
 
     @Override
     public Stream<String> albumNames() {
-        List <String> albumList = new ArrayList<>();
-        this.albums.forEach((key, value) -> albumList.add(key));
-        return albumList.stream().sorted();
+        return this.albums.entrySet().stream().map(Map.Entry::getKey);
     }
 
     @Override
     public Stream<String> albumInYear(final int year) {
-        return null;
+        return this.albums.entrySet().stream().filter(e -> e.getValue().equals(year)).map(Map.Entry::getKey);
     }
 
     @Override
     public int countSongs(final String albumName) {
-        return -1;
+        return (int) this.songs.stream().filter(s -> s.getAlbumName().equals(Optional.of(albumName))).count();
     }
 
     @Override
     public int countSongsInNoAlbum() {
-        return -1;
+        return (int) this.songs.stream().filter(s -> s.getAlbumName().isEmpty()).count();
     }
 
     @Override
     public OptionalDouble averageDurationOfSongs(final String albumName) {
-        return null;
+        return OptionalDouble.of(this.songs.stream().filter(s -> s.getAlbumName().equals(Optional.of(albumName))).map(Song::getDuration).reduce((n,m) -> (n + m) / 2).get());
     }
 
     @Override
     public Optional<String> longestSong() {
-        return null;
+        return this.songs.stream().max((s1 ,s2) -> (int)(s1.duration - s2.duration)).map(Song::getSongName);
     }
 
     @Override
     public Optional<String> longestAlbum() {
-        return null;
+        return this.albums.entrySet().stream().forEach(e ->{
+            this.songs.stream().filter(Song::getAlbumName.equals(e.getKey()))
+            .map(s -> s.duration)
+            .reduce((d1 , d2) -> d1 + d2);
+            });
     }
 
     private static final class Song {
