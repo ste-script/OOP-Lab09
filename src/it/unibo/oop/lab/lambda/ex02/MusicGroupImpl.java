@@ -1,7 +1,11 @@
 package it.unibo.oop.lab.lambda.ex02;
 
+import static org.junit.jupiter.api.DynamicTest.stream;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -31,12 +35,16 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Stream<String> orderedSongNames() {
-        return null;
+        List <String> nameList = new ArrayList<>();
+        this.songs.forEach(s -> nameList.add(s.songName));
+        return nameList.stream().sorted();
     }
 
     @Override
     public Stream<String> albumNames() {
-        return null;
+        List <String> albumList = new ArrayList<>();
+        this.albums.forEach((key, value) -> albumList.add(key));
+        return albumList.stream().sorted();
     }
 
     @Override
