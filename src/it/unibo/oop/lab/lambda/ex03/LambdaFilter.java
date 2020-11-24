@@ -6,7 +6,12 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -14,6 +19,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+
 
 /**
  * Modify this small program adding new filters.
@@ -35,7 +41,11 @@ public final class LambdaFilter extends JFrame {
     private static final long serialVersionUID = 1760990730218643730L;
 
     private enum Command {
-        IDENTITY("No modifications", Function.identity());
+        IDENTITY("No modifications", Function.identity()), 
+        LOWERCASE("Lowercase", s -> s.toLowerCase()),
+        COUNTCHARS("Count the number of chars", s -> String.valueOf(s.chars().count()) ),
+        COUNTLINES("Count the number of lines", s -> String.valueOf(s.lines().count()) ),
+        SORT("List all the words in alphabetical order", s-> Arrays.asList(s.split(" ")).stream().sorted().collect(Collectors.joining(" ")));
 
         private final String commandName;
         private final Function<String, String> fun;
@@ -53,7 +63,9 @@ public final class LambdaFilter extends JFrame {
         public String translate(final String s) {
             return fun.apply(s);
         }
+        
     }
+    
 
     private LambdaFilter() {
         super("Lambda filter GUI");
