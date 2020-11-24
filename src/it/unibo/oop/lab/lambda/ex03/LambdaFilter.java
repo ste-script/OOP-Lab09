@@ -1,5 +1,7 @@
 package it.unibo.oop.lab.lambda.ex03;
 
+import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,6 +10,7 @@ import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -39,13 +42,19 @@ import javax.swing.JTextArea;
 public final class LambdaFilter extends JFrame {
 
     private static final long serialVersionUID = 1760990730218643730L;
+    private static final String PATTERN = "(\\s|\\p{Punct})+";
 
     private enum Command {
         IDENTITY("No modifications", Function.identity()), 
         LOWERCASE("Lowercase", s -> s.toLowerCase()),
         COUNTCHARS("Count the number of chars", s -> String.valueOf(s.chars().count()) ),
         COUNTLINES("Count the number of lines", s -> String.valueOf(s.lines().count()) ),
-        SORT("List all the words in alphabetical order", s-> Arrays.asList(s.split(" ")).stream().sorted().collect(Collectors.joining(" ")));
+        SORT("List all the words in alphabetical order", s-> Arrays.asList(s.split(PATTERN))
+                                                                .stream().sorted()
+                                                                .collect(Collectors.joining(" "))),
+        WORDCOUNT("Write the count of each word", s-> Arrays.asList(s.split(PATTERN))
+                                                                .stream().sorted().toString()
+                                                                );
 
         private final String commandName;
         private final Function<String, String> fun;
@@ -93,6 +102,8 @@ public final class LambdaFilter extends JFrame {
         final int sh = (int) screen.getHeight();
         setSize(sw / 4, sh / 4);
         setLocationByPlatform(true);
+        System.out.println(Arrays.asList("AA b".split(PATTERN))
+        .stream().sorted().collect(Collectors.flatMapping));
     }
 
     /**
